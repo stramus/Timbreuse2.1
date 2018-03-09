@@ -64,7 +64,8 @@ Add additional notes about how to deploy this on a live system
 
 ## Versioning
 
-We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/your/project/tags). 
+* *Initial work 2.0* - [2.0](https://github.com/Pluume/Timbreuse2.0)
+* *Version 2.1* - [2.1](https://github.com/stramus/Timbreuse2.1)
 
 ## Authors
 
