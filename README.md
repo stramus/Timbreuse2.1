@@ -72,7 +72,7 @@ We use [SemVer](http://semver.org/) for versioning. For the versions available, 
 
 ## Authors
 
-* *Initial work 2.0* - [Plume](https://github.com/plume)
+* *Initial work 2.0* - [Pluume](https://github.com/pluume)
 * *Version 2.1* - [Stramus](https://github.com/stramus)
 * *Version 2.1* - [Kurisukun](https://github.com/kurisukun)
 
