@@ -72,9 +72,9 @@ We use [SemVer](http://semver.org/) for versioning. For the versions available, 
 
 ## Authors
 
-* *Initial work 2.0* - [Plume](https://github.com/PurpleBooth)
-* *Version 2.1* - [Stramus](https://github.com/PurpleBooth)
-* *Version 2.1* - [PurpleBooth](https://github.com/PurpleBooth)
+* *Initial work 2.0* - [Plume](https://github.com/plume)
+* *Version 2.1* - [Stramus](https://github.com/stramus)
+* *Version 2.1* - [Kurisukun](https://github.com/kurisukun)
 
 
 
