@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>frontend\slave.js - Timbreuse</title>
+    <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
+    <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
+    <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
+    <link rel="icon" href="../assets/favicon.ico">
+    <script src="http://yui.yahooapis.com/combo?3.9.1/build/yui/yui-min.js"></script>
+</head>
+<body class="yui3-skin-sam">
+
+<div id="doc">
+    <div id="hd" class="yui3-g header">
+        <div class="yui3-u-3-4">
+                <h1><img src="../assets/css/logo.png" title="Timbreuse" width="117" height="52"></h1>
+        </div>
+        <div class="yui3-u-1-4 version">
+            <em>API Docs for: 2.0.0</em>
+        </div>
+    </div>
+    <div id="bd" class="yui3-g">
+
+        <div class="yui3-u-1-4">
+            <div id="docs-sidebar" class="sidebar apidocs">
+                <div id="api-list">
+                    <h2 class="off-left">APIs</h2>
+                    <div id="api-tabview" class="tabview">
+                        <ul class="tabs">
+                            <li><a href="#api-classes">Classes</a></li>
+                            <li><a href="#api-modules">Modules</a></li>
+                        </ul>
+                
+                        <div id="api-tabview-filter">
+                            <input type="search" id="api-filter" placeholder="Type to filter APIs">
+                        </div>
+                
+                        <div id="api-tabview-panel">
+                            <ul id="api-classes" class="apis classes">
+                                <li><a href="../classes/client.html">client</a></li>
+                                <li><a href="../classes/config.html">config</a></li>
+                                <li><a href="../classes/csv.html">csv</a></li>
+                                <li><a href="../classes/DataTable.Api.html">DataTable.Api</a></li>
+                                <li><a href="../classes/db.html">db</a></li>
+                                <li><a href="../classes/frontendHandle.html">frontendHandle</a></li>
+                                <li><a href="../classes/frontendUtil.html">frontendUtil</a></li>
+                                <li><a href="../classes/holidays.html">holidays</a></li>
+                                <li><a href="../classes/informations.html">informations</a></li>
+                                <li><a href="../classes/leavereq.html">leavereq</a></li>
+                                <li><a href="../classes/log.html">log</a></li>
+                                <li><a href="../classes/login.html">login</a></li>
+                                <li><a href="../classes/math.html">math</a></li>
+                                <li><a href="../classes/pages.html">pages</a></li>
+                                <li><a href="../classes/server.html">server</a></li>
+                                <li><a href="../classes/server_methods.html">server_methods</a></li>
+                                <li><a href="../classes/slave.html">slave</a></li>
+                            </ul>
+                
+                
+                            <ul id="api-modules" class="apis modules">
+                                <li><a href="../modules/client.html">client</a></li>
+                                <li><a href="../modules/config.html">config</a></li>
+                                <li><a href="../modules/csv.html">csv</a></li>
+                                <li><a href="../modules/db.html">db</a></li>
+                                <li><a href="../modules/frontendHandle.html">frontendHandle</a></li>
+                                <li><a href="../modules/frontendUtil.html">frontendUtil</a></li>
+                                <li><a href="../modules/holidays.html">holidays</a></li>
+                                <li><a href="../modules/informations.html">informations</a></li>
+                                <li><a href="../modules/leavereq.html">leavereq</a></li>
+                                <li><a href="../modules/log.html">log</a></li>
+                                <li><a href="../modules/login.html">login</a></li>
+                                <li><a href="../modules/main.html">main</a></li>
+                                <li><a href="../modules/math.html">math</a></li>
+                                <li><a href="../modules/pages.html">pages</a></li>
+                                <li><a href="../modules/request.html">request</a></li>
+                                <li><a href="../modules/server.html">server</a></li>
+                                <li><a href="../modules/server_methods.html">server_methods</a></li>
+                                <li><a href="../modules/slave.html">slave</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="yui3-u-3-4">
+                <div id="api-options">
+                    Show:
+                    <label for="api-show-inherited">
+                        <input type="checkbox" id="api-show-inherited" checked>
+                        Inherited
+                    </label>
+            
+                    <label for="api-show-protected">
+                        <input type="checkbox" id="api-show-protected">
+                        Protected
+                    </label>
+            
+                    <label for="api-show-private">
+                        <input type="checkbox" id="api-show-private">
+                        Private
+                    </label>
+                    <label for="api-show-deprecated">
+                        <input type="checkbox" id="api-show-deprecated">
+                        Deprecated
+                    </label>
+            
+                </div>
+            
+            <div class="apidocs">
+                <div id="docs-main">
+                    <div class="content">
+<h1 class="file-heading">File: frontend\slave.js</h1>
+
+<div class="file">
+    <pre class="code prettyprint linenums">
+/**
+ * Handle slave frontend.
+ *
+ * @module slave
+ * @class slave
+ */
+const electron = require(&#x27;electron&#x27;);
+const app = electron.app;
+const ipcMain = electron.ipcMain;
+const BrowserWindow = electron.BrowserWindow;
+const globalShortcut = electron.globalShortcut;
+const path = require(&#x27;path&#x27;);
+const url = require(&#x27;url&#x27;);
+const net = require(&quot;net&quot;);
+const log = require(&quot;./../utils/log.js&quot;);
+const csv = require(&quot;./../utils/csv.js&quot;);
+const request = require(&quot;./../request.js&quot;);
+const moment = require(&quot;moment&quot;);
+var clone = require(&#x27;clone&#x27;);
+var goingToClose = false;
+var connected = false;
+var slaveconn;
+var slaves = [];
+var oreqPile = [];
+/**
+ * Get the current time
+ * @method getNow
+ * @return {String} the current time in a ISO string
+ **/
+function getNow() {
+  return moment().format();
+}
+
+
+/**
+ * Execute the pile of saved request
+ * @method executePile
+ **/
+function executePile() {
+  if (oreqPile.length &amp;&amp; connected) { //If connected to server, then send all the pile
+    slaveconn.write(JSON.stringify(oreqPile) + &quot;\0&quot;);
+    oreqPile = []; //Empty the pile afterwards
+  }
+  for (var i = 0; i &lt; slaves.length; i++) { //Iterate through connected slave
+    if (slaves[i].pile.length &amp;&amp; slaves[i].conn.connected) { //If connected to this slave, then send all the pile
+      slaves[i].conn.write(JSON.stringify(slaves[i].pile) + &quot;\0&quot;);
+      slaves[i].pile = [];
+    }
+
+  }
+
+
+}
+/**
+ * Tag an user
+ * @method tag
+ * @param {String} stag the user&#x27;s tag.
+ * @param {String} ntime the current time.
+ **/
+function tag(stag, ntime) {
+  if (global.DEBUG) {
+    log.info(&quot;Tag : &quot; + stag + &quot; Time : &quot; + ntime);
+  }
+  stag = stag.replace(/\W/g, &#x27;&#x27;); //Replace bad characters
+  var oreq = {
+    fnc: request.REQUEST.TAG,
+    error: request.ERROR.OK,
+    tag: stag,
+    time: ntime,
+    class: global.config.class
+  };
+  csv.writeBruteLoggingToCSV(stag, ntime); //Write tag to CSV
+  if (connected) { //If connected to server send it straight away. If not, store it for later
+    slaveconn.write(JSON.stringify(request.toArray(oreq)) + &quot;\0&quot;);
+  } else {
+    oreq.delayed = true;
+    oreqPile.push(oreq);
+  }
+  var soreq = clone(oreq); //Clone the oreq to alter without altering the first element
+  soreq.fnc = request.REQUEST.PROPAGATE_TAG;
+  for (var i = 0; i &lt; slaves.length; i++) { //Send to every other slave. If connected, directly, if not, at the next reconnexion
+    if (slaves[i].conn.connected) {
+      slaves[i].conn.write(JSON.stringify(request.toArray(soreq)) + &quot;\0&quot;);
+    } else {
+      soreq.delayed = true;
+      slaves[i].pile.push(soreq);
+    }
+
+  }
+}
+
+/**
+ * Compile the complete request before using it
+ * @method compileRequest
+ * @param {Object} ireq The json request
+ **/
+function compileRequest(ireq) {
+  slaveconn.currentBuf += ireq;
+  if (slaveconn.currentBuf[slaveconn.currentBuf.length - 1] == &quot;\0&quot;) { //Compil request separated with a null byte
+    onSocketData(slaveconn.currentBuf.substring(0, slaveconn.currentBuf.length - 1).toString(&quot;utf8&quot;));
+    slaveconn.currentBuf = &quot;&quot;;
+  }
+}
+/**
+ * Handle the incoming data from the outgoing socket
+ * @method onSocketData
+ * @param {Object} nireq The json request
+ **/
+function onSocketData(nireq) {
+  var ireq;
+  try {
+    ireq = JSON.parse(nireq);
+  } catch (err) {
+    log.error(&quot;Error parsing : &quot; + ireq);
+  }
+
+  if (ireq.fnc === undefined)
+    return;
+
+  switch (ireq.fnc) {
+    case request.REQUEST.MASTER:
+      global.mwin.webContents.send(&quot;CSV&quot;, false); //Display that CSV is being copied to screen
+      csv.exportCSV(() =&gt; {
+        global.mwin.webContents.send(&quot;CSV&quot;, true); //Display that CSV have been copied to the USB drive
+      });
+      break;
+    case request.REQUEST.TAG:
+      global.mwin.webContents.send(&quot;slaveStd&quot;, ireq.student); //Display the tagged user&#x27;s informations
+      break;
+    default:
+      break;
+  }
+}
+
+/**
+ * Make the slave always try to maintain a connection with the server
+ * @method foreverConnect
+ **/
+function foreverConnect() {
+  slaveconn = new net.Socket();
+  slaveconn.currentBuf = &quot;&quot;;
+  var connectedToServer = function() { //Connect to server
+    if (connected)
+      return;
+    connected = true;
+    global.mwin.webContents.send(&quot;onlineServer&quot;, true); //Send to renderer process that socket is connected
+    log.info(&#x27;Connected to server!&#x27;);
+    slaveconn.on(&quot;data&quot;, compileRequest);
+    executePile(); //Flush pile
+
+  };
+  var slavesConnect = function() { //Execute pile for newly connected slaves
+    if (this.connected)
+      return;
+    this.connected = true;
+    executePile();
+    log.info(&quot;The Timbreuse &quot; + this.class + &quot; is online.&quot;);
+  };
+  var slavesClose = function(err) { //Handle when connection to a slave is lost
+    this.connected = false;
+    var tsock = this;
+    tsock.removeAllListeners(&quot;connect&quot;);
+    tsock.on(&quot;connect&quot;, slavesConnect);
+    if (!goingToClose) {
+      if (err) {
+        log.warning(&quot;The connection to the Timbreuse &quot; + this.class + &quot; was closed with an error. Connecting back in 5 seconds&quot;);
+        setTimeout(() =&gt; {
+          tsock.connect({
+            host: tsock.ip,
+            port: 703
+          });
+        }, 5000); //Wait for 5 seconds
+      } else {
+        log.warning(&quot;The connection to the Timbreuse &quot; + this.class + &quot; was closed without an error. Connecting back in 5 seconds&quot;);
+        setTimeout(() =&gt; {
+          tsock.connect({
+            host: tsock.ip,
+            port: 703
+          });
+        }, 5000);
+      }
+    } else {
+      log.info(&quot;Connection closed. (&quot; + this.class + &quot;)&quot;);
+    }
+  };
+  for (var i = 0; i &lt; slaves.length; i++) { //Iterate through slaves and connect to them
+    slaves[i].conn = new net.Socket();
+    slaves[i].conn.class = slaves[i].class;
+    slaves[i].conn.connected = false;
+    slaves[i].conn.on(&quot;close&quot;, slavesClose);
+    slaves[i].conn.on(&quot;timeout&quot;, () =&gt; {
+      log.error(&quot;Connection to the slave &quot; + slaves[i].class + &quot; timed out&quot;);
+      slaves[i].conn.connected = false;
+      slaves[i].conn.destroy();
+    });
+    slaves[i].conn.ip = slaves[i].ip;
+    slaves[i].conn.setKeepAlive(true, 10000);
+    slaves[i].conn.connect({
+      host: slaves[i].ip,
+      port: 703
+    }, slavesConnect);
+
+  }
+  slaveconn.on(&quot;timeout&quot;, () =&gt; { //On timeout, destroy socket
+    log.error(&quot;Connection to server timed out&quot;);
+    connected = false;
+    slaveconn.destroy();
+  });
+  slaveconn.on(&quot;close&quot;, (err) =&gt; { //On close, destroy socket and try to reconnect
+    slaveconn.destroy();
+    connected = false;
+    global.mwin.webContents.send(&quot;onlineServer&quot;, false);
+    if (!goingToClose) {
+      if (err) {
+        log.warning(&quot;The connection with the server was closed with an error. Connecting back in 5 seconds&quot;);
+        setTimeout(() =&gt; {
+          slaveconn.connect({
+            host: global.config.server,
+            port: 703
+          }, connectedToServer);
+        }, 5000);
+      } else {
+        log.warning(&quot;The connection with the server was closed without an error. Connecting back in 5 seconds&quot;);
+        setTimeout(() =&gt; {
+          slaveconn.connect({
+            host: global.config.server,
+            port: 703
+          }, connectedToServer);
+        }, 5000);
+      }
+    } else {
+      log.info(&quot;Connection closed.&quot;);
+    }
+
+  });
+  log.info(&quot;Connecting to server : &quot; + global.config.server + &quot;:703&quot;);
+  slaveconn.connect({ //Connect to server
+    host: global.config.server,
+    port: 703
+  }, connectedToServer);
+
+}
+/**
+ * Create the slave frontend
+ * @method createWindow
+ **/
+function createWindow() {
+
+  global.mwin = new BrowserWindow({
+    width: 800,
+    height: 600,
+    show: false
+  });
+  global.mwin.setMenu(null);
+  global.mwin.hide();
+  globalShortcut.register(&#x27;CommandOrControl+W&#x27;, () =&gt; {
+    app.quit();
+  });
+  globalShortcut.register(&#x27;CommandOrControl+I&#x27;, () =&gt; {
+    global.mwin.openDevTools();
+  });
+  global.mwin.loadURL(url.format({
+    pathname: path.join(__dirname, &#x27;web_frontend/pages/slave.html&#x27;),
+    protocol: &#x27;file:&#x27;,
+    slashes: true
+  }));
+  global.mwin.on(&#x27;closed&#x27;, function() {
+    global.mwin = null;
+  });
+  global.mwin.webContents.on(&#x27;did-finish-load&#x27;, function() {
+    global.mwin.show();
+  });
+  global.mwin.on(&quot;show&quot;, () =&gt; {
+    global.mwin.maximize();
+    global.mwin.setFullScreen(true);
+    for (var i = 0; i &lt; global.config.slaves.length; i++) {
+      if (global.config.slaves[i].class != global.config.class) {
+        slaves[i] = global.config.slaves[i];
+        slaves[i].pile = [];
+      }
+    }
+    foreverConnect();
+  });
+}
+/**
+ * Load the slave frontend
+ * @method load
+ **/
+function load() {
+  app.on(&#x27;ready&#x27;, createWindow);
+  app.on(&#x27;window-all-closed&#x27;, function() {
+    if (process.platform !== &#x27;darwin&#x27;) {
+      app.quit();
+    }
+  });
+  app.on(&#x27;activate&#x27;, function() {
+    if (global.mwin === null) {
+      createWindow();
+    }
+  });
+
+}
+/**
+ * Delete all the CSV of the slave
+ * @method delCSV
+ */
+function delCSV() {
+  csv.deleteAllCSV();
+}
+module.exports = {
+  load,
+  tag,
+  getNow,
+  delCSV
+};
+
+    </pre>
+</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="../assets/vendor/prettify/prettify-min.js"></script>
+<script>prettyPrint();</script>
+<script src="../assets/js/yui-prettify.js"></script>
+<script src="../assets/../api.js"></script>
+<script src="../assets/js/api-filter.js"></script>
+<script src="../assets/js/api-list.js"></script>
+<script src="../assets/js/api-search.js"></script>
+<script src="../assets/js/apidocs.js"></script>
+</body>
+</html>

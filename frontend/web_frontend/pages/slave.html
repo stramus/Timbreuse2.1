@@ -1,0 +1,196 @@
+<html>
+
+<head>
+  <!-- Bootstrap Core CSS -->
+  <link href="../vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- MetisMenu CSS -->
+  <link href="../vendor/metisMenu/metisMenu.min.css" rel="stylesheet">
+
+  <!-- Custom CSS -->
+  <link href="../dist/css/sb-admin-2.css" rel="stylesheet">
+  <link href="../dist/css/style.css" rel="stylesheet">
+  <link href="../dist/css/bootstrap-table.css" rel="stylesheet">
+
+  <!-- Morris Charts CSS -->
+  <link href="../vendor/morrisjs/morris.css" rel="stylesheet">
+
+  <!-- Custom Fonts -->
+  <link href="../vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+  <script src="../dist/js/pages.js"></script>
+
+  <title>Timbreuse - Slave</title>
+</head>
+
+<style>
+  .clock {
+    width: 150px;
+    height: 150px;
+    margin-bottom: 10px;
+    display: inline-block;
+  }
+</style>
+
+<body>
+  <div class="page-header" style="border: 0; margin: 0; padding: 0; padding-left: 15px;">
+    <h1>Timbreuse <small>coded with the <i class="glyphicon glyphicon-heart"></i>.</small></h1>
+  </div>
+
+  <div class="centeredContainer">
+    <div id="clockHours" class="clock"></div>
+    <div id="clockMinutes" class="clock"></div>
+    <div id="clockSeconds" class="clock"></div>
+  </div>
+  <div id="infoPane" class="centeredContainer" style="width: 60%; background-color: transparent;border: none;">
+  </div>
+  <script>
+    var ProgressBar = require('../vendor/progressbarjs/progressbarjs.min.js')
+    window.$ = window.jQuery = require('../vendor/jquery/jquery.min.js');
+    window.ERROR = require('electron').remote.getGlobal("ERROR");
+    window.STATUS = require('electron').remote.getGlobal("STATUS");
+    window.PAGES = require('electron').remote.getGlobal("PAGES");
+    setPage(window.PAGES.SLAVE);
+    var slave = require('electron').remote.require("./frontend/slave.js");
+    var currentTag = "";
+
+    function dissmissInfoPane() {
+      try {
+        $("#infoPanel").hide('slow', function() {
+          $("#infoPanel").remove();
+        });
+      } catch (err) {
+        console.log("Oups ! Can't delete an undefined element");
+      }
+
+    }
+
+    function delCSV() {
+      try {
+        slave.delCSV();
+        $("#infoPanel").hide('slow', function() {
+          $("#infoPanel").remove();
+        });
+      } catch (err) {
+        console.log("Oups ! Can't delete an undefined element");
+      }
+
+    }
+    $(function() {
+      $(window).blur(function() {
+        $(window).focus();
+      });
+      $('body').keypress(function(e) {
+        if (e.keyCode == 13) {
+          console.log("Tag > " + currentTag);
+          slave.tag(currentTag.replace(/\W/g, ''), slave.getNow());
+          currentTag = ""
+          return;
+        }
+        currentTag += String.fromCharCode(e.keyCode);
+      });
+      $('body').click(function() {
+        dissmissInfoPane();
+      });
+    });
+    var circleH = new ProgressBar.Circle('#clockHours', {
+      color: '#1b0500',
+      strokeWidth: 12,
+      trailColor: '#eee',
+      trailWidth: 12,
+      easing: 'easeInOut',
+      duration: 1000,
+      svgStyle: null,
+      text: {
+        style: {
+          fontSize: '20px',
+          position: 'absolute',
+          left: '50%',
+          top: '50%',
+          padding: 0,
+          margin: 0,
+          transform: {
+            prefix: true,
+            value: 'translate(-50%, -50%)'
+          }
+        }
+      }
+    });
+
+    circleH.animate(0, {});
+    var circleM = new ProgressBar.Circle('#clockMinutes', {
+      color: '#1b0500',
+      strokeWidth: 12,
+      trailColor: '#eee',
+      trailWidth: 12,
+      easing: 'easeInOut',
+      duration: 1000,
+      svgStyle: null,
+      text: {
+        style: {
+          fontSize: '20px',
+          position: 'absolute',
+          left: '50%',
+          top: '50%',
+          padding: 0,
+          margin: 0,
+          transform: {
+            prefix: true,
+            value: 'translate(-50%, -50%)'
+          }
+        }
+      }
+    });
+
+    circleM.animate(0, {});
+    var circleS = new ProgressBar.Circle('#clockSeconds', {
+      color: '#1b0500',
+      strokeWidth: 12,
+      trailColor: '#eee',
+      trailWidth: 12,
+      easing: 'linear',
+      duration: 1000,
+      svgStyle: null,
+      text: {
+        style: {
+          fontSize: '20px',
+          position: 'absolute',
+          left: '50%',
+          top: '50%',
+          padding: 0,
+          margin: 0,
+          transform: {
+            prefix: true,
+            value: 'translate(-50%, -50%)'
+          }
+        }
+      }
+    });
+
+    circleS.animate(0, {});
+    window.setInterval(function() {
+      var d = new Date();
+      var h = d.getHours();
+      var m = d.getMinutes();
+      var s = d.getSeconds();
+      circleH.animate(h / 24);
+      circleM.animate(m / 60);
+      circleS.animate(s / 60);
+      circleS.setText(s + "s");
+      circleM.setText(m + "m");
+      circleH.setText(h + "h");
+    }, 1000);
+  </script>
+
+  <!-- Bootstrap Core JavaScript -->
+  <script src="../vendor/bootstrap/js/bootstrap.min.js"></script>
+
+  <!-- Custom Theme JavaScript -->
+  <script src="../dist/js/bootstrap-table.js"></script>
+  <script src="../dist/js/informations.js"></script>
+  <script src="../dist/js/redirect.js"></script>
+  <script src="../dist/js/slave.js"></script>
+  <script>
+  </script>
+</body>
+
+</html>
