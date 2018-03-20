@@ -1,4 +1,0 @@
--fnc
--user
--pass
--error
